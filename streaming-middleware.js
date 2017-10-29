@@ -1,44 +1,38 @@
 var GetFunctionArguments = require('./lib/argument-util.js').GetFunctionArguments;
-var MiddlewareTransformStream = require('./lib/MiddlewareTransformStream.js');
-var Transform = require('stream').Transform;
+var MiddlewareChainedStream = require('./lib/MiddlewareChainedStream.js');
+var stream = require('stream');
+var Transform = stream.Transform;
 
-function StreamingMiddleware(context){
+function StreamingMiddleware(){
   if(!(this instanceof StreamingMiddleware)){
-    return new StreamingMiddleware(context);
+    return new StreamingMiddleware();
   }
-
   this._stack = [];
-  this._errorStack = [];
-  this._context = context;
-  this._stream = new MiddlewareTransformStream();
-
 }
 
 StreamingMiddleware.prototype.use = function(fn){
 
-  if(arguments.length < 1 || arguments.length > 1 || !fn || fn === 'undefined'){
-    throw new Error("StreamingMiddleware.use takes a single argument");
+  if(arguments.length > 1 || !fn || fn === 'undefined' || typeof(fn) != "function"){
+    throw new Error("StreamingMiddleware.use takes a single function with the signature (chunk,encoding,next)");
   }
 
   var functionArgs = GetFunctionArguments(fn);
-  if(typeof(fn) === "function" && (functionArgs.length < 2 || functionArgs.length > 3 )){
-    throw new Error("StreamingMiddleware.use takes a single function with the signature ([Error],ctx,next)");
+  if(functionArgs.length < 3 || functionArgs.length > 3 ){
+    throw new Error("StreamingMiddleware.use takes a function with the signature (chunk,encoding,next)");
   }
 
-  if(functionArgs.length === 2){
-
-    this._stack.push(fn);
-
-  }else if (functionArgs.length === 3) {
-
-    this._errorStack.push(fn);
-
-  }
+  this._stack.push(fn);
 
 }
 
-StreamingMiddleware.prototype.stream = function(){
-  return this._stream;
+StreamingMiddleware.prototype.stream = function(options){
+
+  if( this._stack.length === 0 ){
+    return new stream.PassThrough();
+  }
+
+  return new MiddlewareChainedStream(options, this._stack);
+
 }
 
 StreamingMiddleware.prototype._getStreamableMiddleware = function(){
