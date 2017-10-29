@@ -13,7 +13,8 @@ npm install
 
 ## Test
 ```
-mocha --reporter=nyan ./test/streaming-middleware.spec.js
+npm install -g mocha
+mocha --reporter=nyan
 ```
 
 
@@ -41,7 +42,6 @@ var stream = middleware.stream(options);
 // Log the output of all the transforms
 stream.pipe(through(options, function(chunk,enc,next){
   console.log(chunk.count); //  = 2
-  expect(chunk.count).to.equal(2);
   done();
 }));
 
