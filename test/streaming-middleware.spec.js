@@ -65,7 +65,7 @@ describe('StreamingMiddleware', function() {
           expect(app).to.respondTo("stream");
       });
 
-      it('should return a transform stream', function() {
+      it('should return a Readable and Writable stream', function() {
           var middleware = require('../streaming-middleware.js')();
           var stream = middleware.stream();
           expect(stream).to.be.a.ReadableStream;
