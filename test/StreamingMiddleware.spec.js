@@ -13,24 +13,31 @@ function NoopStreamingMiddleware(chunk, enc, next){
 
 describe('StreamingMiddleware', function() {
 
+    var StreamingMiddleware = null;
+
+    beforeEach(function(){
+      StreamingMiddleware = require('../StreamingMiddleware.js');
+    });
+
+    afterEach(function(){
+      StreamingMiddleware = null;
+    });
+
     it('should exist', function() {
-        var StreamingMiddleware = require('../streaming-middleware.js');
         expect(StreamingMiddleware).to.not.be.undefined;
     });
 
     it('should be a function', function() {
-        var StreamingMiddleware = require('../streaming-middleware.js');
         expect(StreamingMiddleware).to.be.a('function');
     });
 
     it('should be able to be used with new operator', function() {
-        var StreamingMiddleware = require('../streaming-middleware.js');
         var withNewOperator = new StreamingMiddleware();
         expect(withNewOperator).to.be.an.instanceOf(StreamingMiddleware);
     });
 
     it('should have an internal _stack property which is initially empty', function() {
-        var middleware = require('../streaming-middleware.js')();
+        var middleware = StreamingMiddleware();
         expect(middleware).to.have.property("_stack");
         var expected = 0;
         var actual = middleware._stack.length;
@@ -40,12 +47,12 @@ describe('StreamingMiddleware', function() {
     describe('#use()', function() {
 
       it('should exist', function() {
-          var app = require('../streaming-middleware.js')();
+          var app = StreamingMiddleware();
           expect(app).to.respondTo("use");
       });
 
       it('should only allow a function with 3 arguments or throw an error', function() {
-          var app = require('../streaming-middleware.js')();
+          var app = StreamingMiddleware();
           var ErrorText = /StreamingMiddleware.use takes a function with the signature \(chunk,encoding,next\)/;
 
           expect(function(){app.use(NoopStreamingMiddleware)}).to.not.throw();
@@ -61,12 +68,12 @@ describe('StreamingMiddleware', function() {
     describe('#stream()', function() {
 
       it('should exist', function() {
-          var app = require('../streaming-middleware.js')();
+          var app = StreamingMiddleware();
           expect(app).to.respondTo("stream");
       });
 
       it('should return a Readable and Writable stream', function() {
-          var middleware = require('../streaming-middleware.js')();
+          var middleware = StreamingMiddleware();
           var stream = middleware.stream();
           expect(stream).to.be.a.ReadableStream;
           expect(stream).to.be.a.WritableStream;
@@ -74,7 +81,7 @@ describe('StreamingMiddleware', function() {
 
       it('should work as Passthrough stream if no middleware functions are configured', function() {
 
-          var middleware = require('../streaming-middleware.js')();
+          var middleware = StreamingMiddleware();
           var stream = middleware.stream();
           var dataIn = '{some: "object"}';
           const chunks = [];
@@ -101,7 +108,7 @@ describe('StreamingMiddleware', function() {
 
       it('should return a pipe of all the streamable middleware functions', function(done) {
 
-          var middleware = require('../streaming-middleware.js')();
+          var middleware = StreamingMiddleware();
           var dataIn = {count: 0};
           var options = {objectMode: true};
 

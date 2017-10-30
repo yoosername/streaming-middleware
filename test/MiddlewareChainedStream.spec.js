@@ -15,18 +15,25 @@ function NoopStreamingMiddleware(chunk, enc, next){
 
 describe('MiddlewareChainedStream', function() {
 
+    var MiddlewareChainedStream = null;
+
+    beforeEach(function(){
+      MiddlewareChainedStream = require('../lib/MiddlewareChainedStream.js');
+    });
+
+    afterEach(function(){
+      MiddlewareChainedStream = null;
+    });
+
     it('should exist', function() {
-        var MiddlewareChainedStream = require('../lib/MiddlewareChainedStream.js');
         expect(MiddlewareChainedStream).to.not.be.undefined;
     });
 
     it('should be a function', function() {
-        var MiddlewareChainedStream = require('../lib/MiddlewareChainedStream.js');
         expect(MiddlewareChainedStream).to.be.a('function');
     });
 
     it('should be able to be used with or without new operator', function() {
-        var MiddlewareChainedStream = require('../lib/MiddlewareChainedStream.js');
         var withNewOperator = new MiddlewareChainedStream();
         expect(withNewOperator).to.be.an.instanceOf(PassThrough);
         expect(withNewOperator).to.be.a.ReadableStream;
@@ -39,7 +46,6 @@ describe('MiddlewareChainedStream', function() {
     });
 
     it('should work with or without optional options argument', function() {
-        var MiddlewareChainedStream = require('../lib/MiddlewareChainedStream.js');
 
         var withoutOptionsNoStack = new MiddlewareChainedStream();
         expect(withoutOptionsNoStack).to.be.an.instanceOf(PassThrough);
@@ -57,7 +63,6 @@ describe('MiddlewareChainedStream', function() {
     });
 
     it('should return a PassthroughStream if stack is empty', function() {
-        var MiddlewareChainedStream = require('../lib/MiddlewareChainedStream.js');
         var withNewOperator = new MiddlewareChainedStream({},[]);
         expect(withNewOperator).to.be.an.instanceOf(PassThrough);
     });
