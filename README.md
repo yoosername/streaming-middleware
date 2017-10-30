@@ -70,7 +70,6 @@ module.exports = Uppercase;
 ```
 #### Usage
 ```bash
-cd examples
 echo "pickle rick" | node cli-extended-with-plugins.js --plugin ./plugin-uppercase.js --plugin ./plugin-reverse.js
 # KCIR ELKCIP
 ```
