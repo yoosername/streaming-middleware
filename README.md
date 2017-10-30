@@ -6,9 +6,9 @@ A simple example of generic middleware which is assembled like express middlewar
 
 Wanted a way to:
 
-* Use runtime modules as part of a CLI to extend functionality
-* Turn simple JS function modules into transform streams
-* Automatically connect them up together so you write to first in stack and read from last.
+* Easily extend functionality of a CLI at runtime with user defined modules
+* Automatically convert simple exported functions into transform streams
+* Automatically connect them up together so you can write data into start of stack and read from end of stack.
 
 ## Build
 ```bash
