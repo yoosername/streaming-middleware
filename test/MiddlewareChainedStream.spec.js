@@ -51,7 +51,7 @@ describe('MiddlewareChainedStream', function() {
         expect(withoutOptionsNoStack).to.be.an.instanceOf(PassThrough);
 
         // WithOptionsNoStack
-        var ErrorText = "Error instantiating MiddlewareChainedStream: transform functions must have signature (chunk,enc,next)";
+        var ErrorText = "Stack validation failed: transform functions must have signature (chunk,enc,next)";
         expect(function(){MiddlewareChainedStream([{}]);}).to.throw(Error, ErrorText);
 
         var withoutOptionsStack = new MiddlewareChainedStream([NoopStreamingMiddleware]);

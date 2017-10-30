@@ -25,45 +25,50 @@ mocha --reporter=nyan
 ```
 
 
-## Example usage (app.js)
+## Example usage
+### (examples/cli-extended-with-plugins.js)
 ```javascript
-var StreamingMiddleware = require('.StreamingMiddleware.js');
-var through2 = require("through2");
+var program = require('commander');
+var path = require("path");
+var StreamingMiddleware = require("../StreamingMiddleware.js");
 var app = StreamingMiddleware();
 
-var count = (process.argv.length > 2) ? parseInt(process.argv[2]) : 1;
-var addAmount = (process.argv.length > 3) ? parseInt(process.argv[3]) : 1;
+function addMiddlewareToStack(middleware, collection) {
+  app.use(path.resolve(__dirname, middleware));
+}
 
-var testDataIn = {count: count};
-var options = {objectMode: true};
+program
+  .version('0.0.1')
+  .option('-p, --plugin [plugin]', 'Add plugin to middleware chain', addMiddlewareToStack, [])
+  .parse(process.argv);
 
-// Add some middleware transform functions
-app.use(function(chunk, enc, next){
-  var obj = chunk;
-  obj.count = obj.count + addAmount; // increment count by chosen amount
-  next(null, obj);
-})
-app.use(function(chunk, enc, next){
-  var obj = chunk;
-  obj.count = obj.count + addAmount; // increment count by chosen amount
-  next(null, obj);
-})
-
-// Create a new stream using object mode
-var stream = app.stream(options);
-
-// Pipe the output of the stream to  console.
-stream.pipe(through2.obj(function(chunk, encoding, callback) {
-    this.push(JSON.stringify(chunk) + '\n')
-    callback()
-}))
-.pipe(process.stdout); // {count : (count + addAmount + addAmount)}
-
-// Now write the test data to the stream.
-stream.write(testDataIn);
+process.stdin.pipe(app.stream()).pipe(process.stdout);
 ```
 
-Run with
+### (examples/plugin-uppercase.js)
+```javascript
+function Uppercase(chunk, enc, next){
+
+  next(null, chunk.toString().toUpperCase() );
+
+}
+
+module.exports = Uppercase;
+```
+
+### (examples/plugin-reverse.js)
+```javascript
+function Uppercase(chunk, enc, next){
+
+  next(null, chunk.toString().split("").reverse().join("").trim("") + "\n" );
+
+}
+
+module.exports = Uppercase;
+```
+### Usage
 ```bash
-node app.js
+cd examples
+echo "pickle rick" | node cli-extended-with-plugins.js --plugin ./plugin-uppercase.js --plugin ./plugin-reverse.js
+# KCIR ELKCIP
 ```

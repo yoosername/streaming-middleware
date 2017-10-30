@@ -1,5 +1,6 @@
 var GetFunctionArguments = require('./lib/GetFunctionArguments.js');
 var MiddlewareChainedStream = require('./lib/MiddlewareChainedStream.js');
+var expand = require("expand-tilde");
 var stream = require('stream');
 var Transform = stream.Transform;
 
@@ -12,8 +13,22 @@ function StreamingMiddleware(){
 
 StreamingMiddleware.prototype.use = function(fn){
 
+  var origFn = fn;
+
   if(arguments.length > 1 || !fn || fn === 'undefined' || typeof(fn) != "function"){
-    throw new Error("StreamingMiddleware.use takes a single function with the signature (chunk,encoding,next)");
+
+    if(typeof(fn) === "string"){
+      try{
+        //console.log(fn);
+        fn = require(expand(fn));
+      }catch(e){
+        //console.log(e);
+        throw new Error("StreamingMiddleware.use was called with a String but could not load the module ("+origFn.toString()+"): ");
+      }
+    }else{
+      throw new Error("StreamingMiddleware.use takes a single function with the signature (chunk,encoding,next)");
+    }
+
   }
 
   var functionArgs = GetFunctionArguments(fn);
