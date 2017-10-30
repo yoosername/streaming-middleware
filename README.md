@@ -1,6 +1,6 @@
-# StreamingMiddleware.js
+# streaming-middleware
 
-A simple example of generic middleware which is assembled like express middleware and then can be used as a stream.
+Enables generic app middleware to be assembled like Express middleware and then be composed into a single transform stream.
 
 ## Why
 
@@ -9,6 +9,7 @@ Wanted a way to:
 * Easily extend functionality of a CLI at runtime with user defined modules
 * Automatically convert simple exported functions into transform streams
 * Automatically connect them up together so you can write data into start of stack and read from end of stack.
+* Ability to reuse functions as object and non object streams and in different orders
 
 ## Build
 ```bash
