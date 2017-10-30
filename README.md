@@ -27,7 +27,8 @@ mocha --reporter=nyan
 
 
 ## Example usage
-### (examples/cli-extended-with-plugins.js)
+### Example 1 - Extend a CLI by referring to plugin modules
+#### examples/cli-extended-with-plugins.js
 ```javascript
 var program = require('commander');
 var path = require("path");
@@ -46,7 +47,7 @@ program
 process.stdin.pipe(app.stream()).pipe(process.stdout);
 ```
 
-### (examples/plugin-uppercase.js)
+#### examples/plugin-uppercase.js
 ```javascript
 function Uppercase(chunk, enc, next){
 
@@ -57,7 +58,7 @@ function Uppercase(chunk, enc, next){
 module.exports = Uppercase;
 ```
 
-### (examples/plugin-reverse.js)
+#### examples/plugin-reverse.js
 ```javascript
 function Uppercase(chunk, enc, next){
 
@@ -67,9 +68,37 @@ function Uppercase(chunk, enc, next){
 
 module.exports = Uppercase;
 ```
-### Usage
+#### Usage
 ```bash
 cd examples
 echo "pickle rick" | node cli-extended-with-plugins.js --plugin ./plugin-uppercase.js --plugin ./plugin-reverse.js
 # KCIR ELKCIP
+```
+
+### Example 2: Extend a CLI with inline code
+#### examples/cli-extended-with-inline-functions.js
+```javascript
+var program = require('commander');
+var path = require("path");
+var StreamingMiddleware = require("../StreamingMiddleware.js");
+var app = StreamingMiddleware();
+
+function addMiddlewareToStack(middleware, collection) {
+  middleware = middleware.replace('$','chunk');
+  var func = Function("chunk","enc","next","next(null," + middleware + ")");
+  app.use(func);
+}
+
+program
+  .version('0.0.1')
+  .option('-f, --function [function]', 'apply function to stream', addMiddlewareToStack, [])
+  .parse(process.argv);
+
+process.stdin.pipe(app.stream()).pipe(process.stdout);
+```
+
+### Usage
+```bash
+echo "tiny rick" | node cli-extended-with-inline-plugins.js -f '$.toString().toUpperCase()' -f '$.toString().split("").reverse().join("").trim() + "\n"'
+# TINY RICK
 ```
