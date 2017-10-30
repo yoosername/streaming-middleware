@@ -100,5 +100,5 @@ process.stdin.pipe(app.stream()).pipe(process.stdout);
 ### Usage
 ```bash
 echo "tiny rick" | node cli-extended-with-inline-plugins.js -f '$.toString().toUpperCase()' -f '$.toString().split("").reverse().join("").trim() + "\n"'
-# TINY RICK
+# KCIR YNIT
 ```
