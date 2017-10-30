@@ -1,50 +1,56 @@
-# streaming-middleware
+# StreamingMiddleware.js
 
-A simple example of generic middleware (used like express middleware) but using stream transform functions.
+A simple example of generic middleware which is assembled like express middleware and then can be used as a stream.
 
 ## Why
 
-Because
+Wanted a way to:
+
+* Use runtime modules as part of a CLI to extend functionality
+* Turn simple JS function modules into transform streams
+* Automatically connect them up together so you write to first in stack and read from last.
 
 ## Build
-```
+```bash
 npm install
 ```
 
 ## Test
-```
+```bash
 npm install -g mocha
+npm test
+
+# or
 mocha --reporter=nyan
 ```
 
 
 ## Example usage
-```
-var middleware = require('./streaming-middleware.js')();
-var dataIn = {count: 0};
+```javascript
+var StreamingMiddleware = require('./StreamingMiddleware.js');
+var app = StreamingMiddleware();
+
+var testDataIn = {count: 0};
 var options = {objectMode: true};
 
 // Add some middleware transform functions
-middleware.use(function(chunk, enc, next){
+app.use(function(chunk, enc, next){
   var obj = chunk;
-  obj.count++;
+  obj.count++; // add 1 to count
   next(null, obj);
 })
-middleware.use(function(chunk, enc, next){
+app.use(function(chunk, enc, next){
   var obj = chunk;
-  obj.count++;
+  obj.count++; // add 1 to count
   next(null, obj);
 })
 
-// Retrieve the stream
-var stream = middleware.stream(options);
+// Create a new stream using object mode
+var stream = app.stream(options);
 
-// Log the output of all the transforms
-stream.pipe(through(options, function(chunk,enc,next){
-  console.log(chunk.count); //  = 2
-  done();
-}));
+// Pipe the output of the stream to  console.
+stream.pipe(process.out); // {count : 2}
 
-// Add some data in
-stream.write(dataIn);
+// Now write the test data to the stream.
+stream.write(testDataIn);
 ```

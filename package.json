@@ -1,17 +1,18 @@
 {
-  "name": "middleware-tdd",
+  "name": "streaming-middleware",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Chain together like express middleware. Use like a stream",
+  "main": "StreamingMiddleware.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/mocha/bin/mocha test/**/*spec.js --reporter spec"
   },
-  "author": "",
+  "author": "yoosername",
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-stream": "0.0.0",
+    "mocha": "^4.0.1",
     "through2": "^2.0.3"
   }
 }
