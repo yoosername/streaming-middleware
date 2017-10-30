@@ -1,4 +1,4 @@
-var GetFunctionArguments = require('./lib/argument-util.js').GetFunctionArguments;
+var GetFunctionArguments = require('./lib/GetFunctionArguments.js');
 var MiddlewareChainedStream = require('./lib/MiddlewareChainedStream.js');
 var stream = require('stream');
 var Transform = stream.Transform;
