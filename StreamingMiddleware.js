@@ -43,7 +43,7 @@ StreamingMiddleware.prototype.use = function(fn){
 StreamingMiddleware.prototype.stream = function(options){
 
   if( this._stack.length === 0 ){
-    return new stream.PassThrough();
+    return new stream.PassThrough(options);
   }
 
   return new MiddlewareChainedStream(options, this._stack);
