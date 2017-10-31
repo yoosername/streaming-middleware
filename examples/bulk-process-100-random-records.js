@@ -23,7 +23,6 @@ program
   .parse(process.argv);
 
 var ws = new WritableBulk(function(bulkCmds, callback) {
-  console.log("gets here");
   client.bulk({
     index : 'test',
     type  : 'test',

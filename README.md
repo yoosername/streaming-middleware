@@ -101,3 +101,112 @@ process.stdin.pipe(app.stream()).pipe(process.stdout);
 echo "tiny rick" | node cli-extended-with-inline-plugins.js -f '$.toString().toUpperCase()' -f '$.toString().split("").reverse().join("").trim() + "\n"'
 # KCIR YNIT
 ```
+
+### Example 3 - Bulk upload 100 random docs to elasticsearch
+Note: This requires elasticsearch running on localhost:32769 (hint: Try docker)
+#### examples/bulk-process-100-random-records.js
+```javascript
+var program = require('commander');
+var path = require("path");
+var WritableBulk = require('elasticsearch-streams').WritableBulk;
+var random = require('random-document-stream');
+var client = new require('elasticsearch').Client({
+  //log: "debug",
+  host: {
+    protocol: 'http',
+    host: 'localhost',
+    port: 32769,
+    path: '/'
+  }});
+var StreamingMiddleware = require("../StreamingMiddleware.js");
+var app = StreamingMiddleware();
+
+function addMiddlewareToStack(middleware, collection) {
+  app.use(path.resolve(__dirname, middleware));
+}
+
+program
+  .version('0.0.1')
+  .option('-p, --plugin [plugin]', 'Add plugin to middleware chain', addMiddlewareToStack, [])
+  .parse(process.argv);
+
+var ws = new WritableBulk(function(bulkCmds, callback) {
+  client.bulk({
+    index : 'test',
+    type  : 'test',
+    body  : bulkCmds
+  }, callback);
+});
+
+random(100)
+  .pipe(app.stream({objectMode:true}))
+  .pipe(ws)
+```
+#### examples/plugin-transform-to-bulk.js
+```javascript
+function TransformToBulk(doc, enc, next){
+
+  var docId = doc._id;
+  doc._id = undefined;
+  this.push({ index: { _id: docId } });
+  this.push(doc);
+  next();
+
+}
+
+module.exports = TransformToBulk;
+```
+### Usage
+```bash
+node bulk-process-100-random-records.js -p plugin-transform-to-bulk.js
+```
+
+### Example 4 - Stream elasticsearch results and process with inline plugin
+Note: This requires elasticsearch running on localhost:32769 (hint: Try docker)
+#### examples/elasticsearch-search-stream-example.js
+```javascript
+var program = require('commander');
+var path = require("path");
+var StreamingMiddleware = require("../StreamingMiddleware.js");
+var app = StreamingMiddleware();
+var ReadableSearch = require('elasticsearch-streams').ReadableSearch;
+var client = new require('elasticsearch').Client({
+  //log : "debug",
+  host: {
+    protocol: 'http',
+    host: 'localhost',
+    port: 32769,
+    path: '/'
+  }
+});
+
+function addMiddlewareToStack(middleware, collection) {
+  middleware = middleware.replace('$','chunk');
+  var func = Function("chunk","enc","next","next(null," + middleware + ")");
+  app.use(func);
+}
+
+program
+  .version('0.0.1')
+  .option('-f, --function [function]', 'apply function to stream', addMiddlewareToStack, [])
+  .parse(process.argv);
+
+var searchExec = function searchExec(from, callback) {
+  client.search({
+    index: 'test',
+    from: from,
+    size: 12,
+    body: {
+      query: { match_all: {} }
+    }
+  }, callback);
+};
+
+var rs = new ReadableSearch(searchExec);
+rs.pipe(app.stream({objectMode: true})).pipe(process.stdout);
+```
+
+### Usage
+```bash
+node elasticsearch-search-stream-example.js -f 'JSON.stringify($._source.name) + "\n"'
+```
