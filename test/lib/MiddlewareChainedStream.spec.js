@@ -145,7 +145,7 @@ describe('MiddlewareChainedStream', function() {
 
     });
 
-    it('should emit Writable finish event correctly upon end()', function(done) {
+    it('should emit _final event correctly upon end() before finish event', function(done) {
 
         var stream = new MiddlewareChainedStream([
           function(chunk,enc,next){
@@ -172,7 +172,7 @@ describe('MiddlewareChainedStream', function() {
 
     });
 
-    it('should emit Writable data event correctly', function(done) {
+    it('should emit data event correctly', function(done) {
 
         var stream = new MiddlewareChainedStream([
           function(chunk,enc,next){
@@ -193,6 +193,45 @@ describe('MiddlewareChainedStream', function() {
         .on('finish', function() {
           expect(result).to.equal("EMOSTUPNIATAD");
           done();
+        })
+
+        input.forEach(function(str){
+          stream.write(str);
+        });
+
+        stream.end();
+
+    });
+
+    it('should emit readable event when end of stream reached', function(done) {
+
+        var stream = new MiddlewareChainedStream([
+          function(chunk,enc,next){
+            next(null, chunk.toString().split("").reverse().join(""));
+          },
+          function(chunk,enc,next){
+            next(null, chunk.toString().toUpperCase());
+          },
+        ]);
+
+        var input = ["some","input","data"];
+        var result = "";
+
+        stream
+        .on('readable', function() {
+          // read a chunk
+          var read = stream.read();
+
+          // if our result already matches the expected string then result should be null
+          // which indicates end of the stream has been reached.
+          if(result === "EMOSTUPNIATAD"){
+            expect(read).to.equal(null);
+            done();
+          }
+
+          // otherwise just increment the result
+          result += read.toString();
+
         })
 
         input.forEach(function(str){
