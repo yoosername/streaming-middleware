@@ -15,7 +15,7 @@ app
   .use(function Uppercase(chunk, enc, next){
     next(null, chunk.toString().toUpperCase() );
   })
-  .use(function Uppercase(chunk, enc, next){
+  .use(function Reverse(chunk, enc, next){
     next(null, chunk.toString().split("").reverse().join("").trim("") + "\n" );
   })
 
