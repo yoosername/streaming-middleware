@@ -121,29 +121,29 @@ describe('MiddlewareChainedStream', function() {
 
     });
 
-    it('should call _final when end() is called', function(done) {
-
-        var stream = new MiddlewareChainedStream([
-          function(chunk,enc,next){
-            next(null, chunk.toString().split("").reverse().join(""));
-          },
-          function(chunk,enc,next){
-            next(null, chunk.toString().toUpperCase());
-          },
-        ]);
-
-        sinon.spy(stream);
-
-        passStream
-        .pipe(stream)
-        .pipe(memStream)
-        .on('finish', function() {
-          expect(stream._final).to.have.been.called();
-          done();
-        });
-
-        stream.end(new Buffer('test data'));
-
-    });
+    // it('should call _final when end() is called', function(done) {
+    //
+    //     var stream = new MiddlewareChainedStream([
+    //       function(chunk,enc,next){
+    //         next(null, chunk.toString().split("").reverse().join(""));
+    //       },
+    //       function(chunk,enc,next){
+    //         next(null, chunk.toString().toUpperCase());
+    //       },
+    //     ]);
+    //
+    //     sinon.spy(stream);
+    //
+    //     passStream
+    //     .pipe(stream)
+    //     .pipe(memStream)
+    //     .on('finish', function() {
+    //       expect(stream._final).to.have.been.called();
+    //       done();
+    //     });
+    //
+    //     stream.end(new Buffer('test data'));
+    //
+    // });
 
 });

@@ -16,7 +16,7 @@ describe('StreamingMiddleware', function() {
     var StreamingMiddleware = null;
 
     beforeEach(function(){
-      StreamingMiddleware = require('../StreamingMiddleware.js');
+      StreamingMiddleware = require('../lib/StreamingMiddleware.js');
     });
 
     afterEach(function(){
@@ -73,7 +73,7 @@ describe('StreamingMiddleware', function() {
           var app = StreamingMiddleware();
           var ErrorText = /StreamingMiddleware.use was called with a String but could not load the module/;
 
-          expect(function(){app.use("./examples/plugin-uppercase.js")}).to.not.throw();
+          expect(function(){app.use("../examples/plugin-uppercase.js")}).to.not.throw();
           expect(function(){app.use("random text")}).to.throw(Error, ErrorText);
 
       });

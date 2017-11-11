@@ -1,21 +1,20 @@
 {
   "name": "streaming-middleware",
-  "version": "1.0.0",
-  "description": "Chain together like express middleware. Use like a stream",
-  "main": "StreamingMiddleware.js",
+  "version": "0.0.1",
+  "description": "Compose a Transform Stream a bit like Express/Connect middleware.",
+  "main": "index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha test/**/*spec.js --reporter spec"
   },
-  "author": "yoosername",
-  "license": "ISC",
-  "dependencies": {
+  "author": "https://github.com/yoosername",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {    
     "commander": "^2.11.0",
     "elasticsearch": "^13.3.1",
     "elasticsearch-streams": "0.0.10",
     "expand-tilde": "^2.0.2",
-    "random-document-stream": "0.0.0"
-  },
-  "devDependencies": {
+    "random-document-stream": "0.0.0",
     "chai": "^4.1.2",
     "chai-stream": "0.0.0",
     "memory-stream": "0.0.3",
