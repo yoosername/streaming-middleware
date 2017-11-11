@@ -29,11 +29,13 @@ echo "pickle rick" | node app.js      // # KCIR ELKCIP
 ## Build & Test
 ```bash
 npm install
-npm install -g mocha
 npm test
 
 # or
-mocha --reporter=nyan
+npm install -g mocha
+mocha test/**/*spec.js --reporter spec
+# or
+mocha test/**/*spec.js --reporter=nyan
 ```
 
 ## Api

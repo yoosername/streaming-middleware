@@ -28,7 +28,7 @@ describe('MiddlewareChainedStream', function() {
     var passStream = null;
 
     beforeEach(function(){
-      MiddlewareChainedStream = require('../lib/MiddlewareChainedStream.js');
+      MiddlewareChainedStream = require('../../lib/MiddlewareChainedStream.js');
       passStream = new stream.PassThrough();
       // = fs.createReadStream(path.join(__dirname, 'file.txt'));
       memStream = new MemoryStream.createWriteStream();

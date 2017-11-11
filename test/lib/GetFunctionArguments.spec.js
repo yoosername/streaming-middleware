@@ -6,7 +6,7 @@ describe('GetFunctionArguments', function() {
   var GetFunctionArguments = null;
 
   beforeEach(function(){
-    GetFunctionArguments = require('../lib/GetFunctionArguments.js');
+    GetFunctionArguments = require('../../lib/GetFunctionArguments.js');
   });
 
   afterEach(function(){

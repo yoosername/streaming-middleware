@@ -16,7 +16,7 @@ describe('StreamingMiddleware', function() {
     var StreamingMiddleware = null;
 
     beforeEach(function(){
-      StreamingMiddleware = require('../lib/StreamingMiddleware.js');
+      StreamingMiddleware = require('../../lib/StreamingMiddleware.js');
     });
 
     afterEach(function(){

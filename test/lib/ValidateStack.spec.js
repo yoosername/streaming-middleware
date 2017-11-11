@@ -6,7 +6,7 @@ describe('ValidateStack', function() {
   var ValidateStack = null;
 
   beforeEach(function(){
-    ValidateStack = require('../lib/ValidateStack.js');
+    ValidateStack = require('../../lib/ValidateStack.js');
   });
 
   afterEach(function(){
