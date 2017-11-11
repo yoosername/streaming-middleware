@@ -6,13 +6,9 @@ var sinonChai = require('sinon-chai');
 chai.use(chaiStream);
 chai.use(sinonChai);
 var expect = chai.expect;
-var Util = require('util');
-var through2 = require("through2");
 var stream = require("stream");
 var PassThrough = stream.PassThrough;
 var MemoryStream = require('memorystream');
-var fs = require("fs");
-var path = require("path");
 
 
 function NoopStreamingMiddleware(chunk, enc, next){
@@ -30,7 +26,6 @@ describe('MiddlewareChainedStream', function() {
     beforeEach(function(){
       MiddlewareChainedStream = require('../../lib/MiddlewareChainedStream.js');
       passStream = new stream.PassThrough();
-      // = fs.createReadStream(path.join(__dirname, 'file.txt'));
       memStream = new MemoryStream.createWriteStream();
     });
 
@@ -66,7 +61,6 @@ describe('MiddlewareChainedStream', function() {
         var withoutOptionsNoStack = new MiddlewareChainedStream();
         expect(withoutOptionsNoStack).to.be.an.instanceOf(PassThrough);
 
-        // WithOptionsNoStack
         var ErrorText = "Stack validation failed: transform functions must have signature (chunk,enc,next)";
         expect(function(){MiddlewareChainedStream([{}]);}).to.throw(Error, ErrorText);
 
@@ -121,29 +115,92 @@ describe('MiddlewareChainedStream', function() {
 
     });
 
-    // it('should call _final when end() is called', function(done) {
-    //
-    //     var stream = new MiddlewareChainedStream([
-    //       function(chunk,enc,next){
-    //         next(null, chunk.toString().split("").reverse().join(""));
-    //       },
-    //       function(chunk,enc,next){
-    //         next(null, chunk.toString().toUpperCase());
-    //       },
-    //     ]);
-    //
-    //     sinon.spy(stream);
-    //
-    //     passStream
-    //     .pipe(stream)
-    //     .pipe(memStream)
-    //     .on('finish', function() {
-    //       expect(stream._final).to.have.been.called();
-    //       done();
-    //     });
-    //
-    //     stream.end(new Buffer('test data'));
-    //
-    // });
+    it('should emit Writable finish event correctly', function(done) {
+
+        var stream = new MiddlewareChainedStream([
+          function(chunk,enc,next){
+            next(null, chunk.toString().split("").reverse().join(""));
+          },
+          function(chunk,enc,next){
+            next(null, chunk.toString().toUpperCase());
+          },
+        ]);
+
+        var spy = sinon.spy(stream, "_final");
+
+        stream
+        .on('finish', function() {
+          expect(spy.called).to.be.true;
+          done();
+        })
+        .on('data', function() {
+          //for some reason there has to be a data handler configured or finish event nevers gets called
+        });
+
+        for (let i = 0; i < 11; i++) {
+          stream.write(`${i}`);
+        }
+
+        stream.end();
+
+    });
+
+    it('should emit Writable finish event correctly upon end()', function(done) {
+
+        var stream = new MiddlewareChainedStream([
+          function(chunk,enc,next){
+            next(null, chunk.toString().split("").reverse().join(""));
+          },
+          function(chunk,enc,next){
+            next(null, chunk.toString().toUpperCase());
+          },
+        ]);
+
+        var spy = sinon.spy(stream, "_final");
+
+        stream
+        .on('finish', function() {
+          expect(spy.calledOnce).to.be.true;
+          done();
+        })
+
+        for (let i = 0; i < 11; i++) {
+          stream.write(`${i}`);
+        }
+
+        stream.end();
+
+    });
+
+    it('should emit Writable data event correctly', function(done) {
+
+        var stream = new MiddlewareChainedStream([
+          function(chunk,enc,next){
+            next(null, chunk.toString().split("").reverse().join(""));
+          },
+          function(chunk,enc,next){
+            next(null, chunk.toString().toUpperCase());
+          },
+        ]);
+
+        var input = ["some","input","data"];
+        var result = "";
+
+        stream
+        .on('data', function(chunk) {
+          result += chunk.toString();
+        })
+        .on('finish', function() {
+          expect(result).to.equal("EMOSTUPNIATAD");
+          done();
+        })
+
+        input.forEach(function(str){
+          stream.write(str);
+        });
+
+        stream.end();
+
+    });
 
 });
