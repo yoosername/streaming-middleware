@@ -52,3 +52,4 @@ See [more examples in the Example folder](https://github.com/yoosername/streamin
 
 * Increase test coverage
 * Ability to use class or function that extends TransformStream as well as plain JS function
+* Reduce external dependencies to zero
