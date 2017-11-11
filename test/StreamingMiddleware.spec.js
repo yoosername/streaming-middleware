@@ -51,6 +51,12 @@ describe('StreamingMiddleware', function() {
           expect(app).to.respondTo("use");
       });
 
+      it('should return this for chaining', function() {
+          var app = StreamingMiddleware();
+          var obj = app.use(function(chunk,enc,next){});
+          expect(app).to.eql(obj);
+      });
+
       it('should only allow a function with 3 arguments or throw an error', function() {
           var app = StreamingMiddleware();
           var ErrorText = /StreamingMiddleware.use takes a function with the signature \(chunk,encoding,next\)/;

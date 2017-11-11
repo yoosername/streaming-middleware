@@ -18,7 +18,11 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-stream": "0.0.0",
+    "memory-stream": "0.0.3",
+    "memorystream": "^0.3.1",
     "mocha": "^4.0.1",
+    "sinon": "^4.1.1",
+    "sinon-chai": "^2.14.0",
     "through2": "^2.0.3"
   }
 }

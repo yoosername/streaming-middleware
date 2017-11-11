@@ -1,12 +1,19 @@
 'use strict';
 var chai = require('chai');
+var sinon = require("sinon");
 var chaiStream = require('chai-stream');
+var sinonChai = require('sinon-chai');
 chai.use(chaiStream);
+chai.use(sinonChai);
 var expect = chai.expect;
 var Util = require('util');
-var through = require("through2");
+var through2 = require("through2");
 var stream = require("stream");
 var PassThrough = stream.PassThrough;
+var MemoryStream = require('memorystream');
+var fs = require("fs");
+var path = require("path");
+
 
 function NoopStreamingMiddleware(chunk, enc, next){
   this.push(chunk);
@@ -16,13 +23,22 @@ function NoopStreamingMiddleware(chunk, enc, next){
 describe('MiddlewareChainedStream', function() {
 
     var MiddlewareChainedStream = null;
+    var readStream = null;
+    var memStream = null;
+    var passStream = null;
 
     beforeEach(function(){
       MiddlewareChainedStream = require('../lib/MiddlewareChainedStream.js');
+      passStream = new stream.PassThrough();
+      // = fs.createReadStream(path.join(__dirname, 'file.txt'));
+      memStream = new MemoryStream.createWriteStream();
     });
 
     afterEach(function(){
       MiddlewareChainedStream = null;
+      readStream = null;
+      memStream = null;
+      passStream = null;
     });
 
     it('should exist', function() {
@@ -65,6 +81,69 @@ describe('MiddlewareChainedStream', function() {
     it('should return a PassthroughStream if stack is empty', function() {
         var withNewOperator = new MiddlewareChainedStream({},[]);
         expect(withNewOperator).to.be.an.instanceOf(PassThrough);
+    });
+
+    it('should pipe data correctly as a Passthrough', function(done) {
+        var stream = new MiddlewareChainedStream();
+
+        passStream
+        .pipe(stream)
+        .pipe(memStream)
+        .on('finish', function() {
+          expect(memStream.toString()).to.eql('test data');
+          done();
+        });
+
+        passStream.end(new Buffer('test data'));
+
+    });
+
+    it('should pipe data correctly with middleware', function(done) {
+
+        var stream = new MiddlewareChainedStream([
+          function(chunk,enc,next){
+            next(null, chunk.toString().split("").reverse().join(""));
+          },
+          function(chunk,enc,next){
+            next(null, chunk.toString().toUpperCase());
+          },
+        ]);
+
+        passStream
+        .pipe(stream)
+        .pipe(memStream)
+        .on('finish', function() {
+          expect(memStream.toString()).to.eql('ATAD TSET');
+          done();
+        });
+
+        passStream.end(new Buffer('test data'));
+
+    });
+
+    it('should call _final when end() is called', function(done) {
+
+        var stream = new MiddlewareChainedStream([
+          function(chunk,enc,next){
+            next(null, chunk.toString().split("").reverse().join(""));
+          },
+          function(chunk,enc,next){
+            next(null, chunk.toString().toUpperCase());
+          },
+        ]);
+
+        sinon.spy(stream);
+
+        passStream
+        .pipe(stream)
+        .pipe(memStream)
+        .on('finish', function() {
+          expect(stream._final).to.have.been.called();
+          done();
+        });
+
+        stream.end(new Buffer('test data'));
+
     });
 
 });

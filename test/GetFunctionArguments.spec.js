@@ -37,4 +37,19 @@ describe('GetFunctionArguments', function() {
       expect(fourArgs[3]).to.equal("arg4");
   });
 
+  it('should always return an array no matter what is passed', function() {
+      expect(GetFunctionArguments([])).to.be.an("array");
+      expect(GetFunctionArguments([])).to.have.lengthOf(0);
+      expect(GetFunctionArguments({})).to.be.an("array");
+      expect(GetFunctionArguments({})).to.have.lengthOf(0);
+      expect(GetFunctionArguments("")).to.be.an("array");
+      expect(GetFunctionArguments("")).to.have.lengthOf(0);
+      expect(GetFunctionArguments(Function())).to.be.an("array");
+      expect(GetFunctionArguments(Function())).to.have.lengthOf(0);
+      expect(GetFunctionArguments(null)).to.be.an("array");
+      expect(GetFunctionArguments(null)).to.have.lengthOf(0);
+      expect(GetFunctionArguments()).to.be.an("array");
+      expect(GetFunctionArguments()).to.have.lengthOf(0);
+  });
+
 });

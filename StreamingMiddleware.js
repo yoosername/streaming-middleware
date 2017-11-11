@@ -38,6 +38,9 @@ StreamingMiddleware.prototype.use = function(fn){
 
   this._stack.push(fn);
 
+  // for chaining
+  return this;
+
 }
 
 StreamingMiddleware.prototype.stream = function(options){
