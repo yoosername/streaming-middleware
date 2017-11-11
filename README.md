@@ -38,7 +38,7 @@ mocha --reporter=nyan
 TODO
 
 ## Examples
-See [more examples in the Example folder](https://github.com/yoosername/streaming-middleware/edit/master/examples/EXAMPLES.md)
+See [more examples in the Example folder](https://github.com/yoosername/streaming-middleware/blob/master/examples/EXAMPLES.md)
 
 
 ## Why
