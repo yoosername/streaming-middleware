@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/yoosername/streaming-middleware.svg?branch=master)](https://travis-ci.org/yoosername/streaming-middleware)
+
 # streaming-middleware
 
 Compose a Transform Stream a bit like Express/Connect middleware.
