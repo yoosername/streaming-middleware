@@ -63,6 +63,7 @@ describe('StreamingMiddleware', function() {
 
           expect(function(){app.use(NoopStreamingMiddleware)}).to.not.throw();
 
+          expect(function(){app.use([])}).to.throw(Error, ErrorText);
           expect(function(){app.use(function(){})}).to.throw(Error, ErrorText);
           expect(function(){app.use(function(one,two){})}).to.throw(Error, ErrorText);
           expect(function(){app.use(function(onw,two,three,four){})}).to.throw(Error, ErrorText);
