@@ -1,11 +1,9 @@
 [![Build Status](https://travis-ci.org/yoosername/streaming-middleware.svg?branch=master)](https://travis-ci.org/yoosername/streaming-middleware)
 
 # streaming-middleware
-
-Compose a Transform Stream a bit like Express/Connect middleware.
+Compose a chain of Transform Streams with Express-like middleware.
 
 ## Usage
-
 app.js
 ```javascript
 var StreamingMiddleware = require("../StreamingMiddleware.js");
@@ -46,12 +44,10 @@ See [more examples in the Example folder](https://github.com/yoosername/streamin
 
 
 ## Why
-
 * Experimenting with creating an easily extendable CLI for processing streamed data
 * Experimenting with a test driven approach
 
 ## Todo
-
 * Increase test coverage
 * Ability to use class or function that extends TransformStream as well as plain JS function
 * Reduce external dependencies to zero
