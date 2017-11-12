@@ -1,24 +1,23 @@
 'use strict';
-var chai = require('chai');
-var sinon = require("sinon");
-var chaiStream = require('chai-stream');
-var sinonChai = require('sinon-chai');
+const chai = require('chai');
+const sinon = require("sinon");
+const chaiStream = require('chai-stream');
+const sinonChai = require('sinon-chai');
 chai.use(chaiStream);
 chai.use(sinonChai);
-var expect = chai.expect;
-var stream = require("stream");
-var PassThrough = stream.PassThrough;
-var MemoryStream = require('memorystream');
+const expect = chai.expect;
+
+const {PassThrough} = require("stream");
+const MemoryStream = require('memorystream');
+const MiddlewareChainedStream = require('../../lib/MiddlewareChainedStream.js');
+
 const validStack = [function NoopStreamingMiddleware(chunk, enc, next){
   this.push(chunk);
   callback();
 }];
-const MiddlewareChainedStream = require('../../lib/MiddlewareChainedStream.js');
-
 
 describe('MiddlewareChainedStream', function() {
 
-    var readStream = null;
     var memStream = null;
     var passStream = null;
 
@@ -28,7 +27,6 @@ describe('MiddlewareChainedStream', function() {
     });
 
     afterEach(function(){
-      readStream = null;
       memStream = null;
       passStream = null;
     });

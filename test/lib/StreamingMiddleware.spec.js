@@ -1,10 +1,12 @@
 'use strict';
-var chai = require('chai');
-var chaiStream = require('chai-stream');
+const chai = require('chai');
+const chaiStream = require('chai-stream');
 chai.use(chaiStream);
-var expect = chai.expect;
-var Util = require('util');
-var through = require("through2");
+const expect = chai.expect;
+const Util = require('util');
+
+const TransformStreamWrapper = require("../../lib/TransformStreamWrapper.js");
+const StreamingMiddleware = require('../../lib/StreamingMiddleware.js');
 
 function NoopStreamingMiddleware(chunk, enc, next){
   this.push(chunk);
@@ -12,16 +14,6 @@ function NoopStreamingMiddleware(chunk, enc, next){
 };
 
 describe('StreamingMiddleware', function() {
-
-    var StreamingMiddleware = null;
-
-    beforeEach(function(){
-      StreamingMiddleware = require('../../lib/StreamingMiddleware.js');
-    });
-
-    afterEach(function(){
-      StreamingMiddleware = null;
-    });
 
     it('should exist', function() {
         expect(StreamingMiddleware).to.not.be.undefined;
@@ -142,7 +134,7 @@ describe('StreamingMiddleware', function() {
           })
 
           var stream = middleware.stream(options);
-          stream.pipe(through(options, function(chunk,enc,next){
+          stream.pipe(TransformStreamWrapper(options, function(chunk,enc,next){
             //console.log("final pipe received a chunk: ",chunk);
             expect(chunk.count).to.equal(2);
             done();

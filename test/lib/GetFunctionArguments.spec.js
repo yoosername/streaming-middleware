@@ -1,17 +1,8 @@
 'use strict';
-var expect = require('chai').expect;
+const expect = require('chai').expect;
+const GetFunctionArguments = require('../../lib/GetFunctionArguments.js');
 
 describe('GetFunctionArguments', function() {
-
-  var GetFunctionArguments = null;
-
-  beforeEach(function(){
-    GetFunctionArguments = require('../../lib/GetFunctionArguments.js');
-  });
-
-  afterEach(function(){
-    GetFunctionArguments = null;
-  });
 
   it('should exist', function() {
       expect(GetFunctionArguments).to.not.be.undefined;
