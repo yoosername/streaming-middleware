@@ -1,37 +1,32 @@
 'use strict';
-var chai = require('chai');
-var sinon = require("sinon");
-var chaiStream = require('chai-stream');
-var sinonChai = require('sinon-chai');
+const chai = require('chai');
+const sinon = require("sinon");
+const chaiStream = require('chai-stream');
+const sinonChai = require('sinon-chai');
 chai.use(chaiStream);
 chai.use(sinonChai);
-var expect = chai.expect;
-var stream = require("stream");
-var PassThrough = stream.PassThrough;
-var MemoryStream = require('memorystream');
+const expect = chai.expect;
 
+const {PassThrough} = require("stream");
+const MemoryStream = require('memorystream');
+const MiddlewareChainedStream = require('../../lib/MiddlewareChainedStream.js');
 
-function NoopStreamingMiddleware(chunk, enc, next){
+const validStack = [function NoopStreamingMiddleware(chunk, enc, next){
   this.push(chunk);
   callback();
-};
+}];
 
 describe('MiddlewareChainedStream', function() {
 
-    var MiddlewareChainedStream = null;
-    var readStream = null;
     var memStream = null;
     var passStream = null;
 
     beforeEach(function(){
-      MiddlewareChainedStream = require('../../lib/MiddlewareChainedStream.js');
-      passStream = new stream.PassThrough();
+      passStream = new PassThrough();
       memStream = new MemoryStream.createWriteStream();
     });
 
     afterEach(function(){
-      MiddlewareChainedStream = null;
-      readStream = null;
       memStream = null;
       passStream = null;
     });
@@ -58,16 +53,16 @@ describe('MiddlewareChainedStream', function() {
 
     it('should work with or without optional options argument', function() {
 
-        var withoutOptionsNoStack = new MiddlewareChainedStream();
-        expect(withoutOptionsNoStack).to.be.an.instanceOf(PassThrough);
+        // var withoutOptionsNoStack = new MiddlewareChainedStream();
+        // expect(withoutOptionsNoStack).to.be.an.instanceOf(PassThrough);
 
         var ErrorText = "Stack validation failed: transform functions must have signature (chunk,enc,next)";
         expect(function(){MiddlewareChainedStream([{}]);}).to.throw(Error, ErrorText);
 
-        var withoutOptionsStack = new MiddlewareChainedStream([NoopStreamingMiddleware]);
+        var withoutOptionsStack = new MiddlewareChainedStream(validStack);
         expect(withoutOptionsStack).to.be.an.instanceOf(MiddlewareChainedStream);
 
-        var withOptionsStack = new MiddlewareChainedStream({},[NoopStreamingMiddleware]);
+        var withOptionsStack = new MiddlewareChainedStream({},validStack);
         expect(withOptionsStack).to.be.an.instanceOf(MiddlewareChainedStream);
 
     });
