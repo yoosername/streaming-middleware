@@ -13,6 +13,8 @@ function NoopStreamingMiddleware(chunk, enc, next){
   callback();
 };
 
+const VALIDATION_ERROR = "Stack must be none null and contain only functions that inherit stream.Transform or have 3 args";
+
 describe('StreamingMiddleware', function() {
 
     it('should exist', function() {
@@ -43,31 +45,29 @@ describe('StreamingMiddleware', function() {
           expect(app).to.respondTo("use");
       });
 
-      it('should return this for chaining', function() {
+      it('should return (this) for chaining', function() {
           var app = StreamingMiddleware();
           var obj = app.use(function(chunk,enc,next){});
           expect(app).to.eql(obj);
       });
 
-      it('should only allow a function with 3 arguments or throw an error', function() {
+      it('should only allow Transform instances or plain function with 3 arguments or throw an error', function() {
           var app = StreamingMiddleware();
-          var ErrorText = /StreamingMiddleware.use takes a function with the signature \(chunk,encoding,next\)/;
 
           expect(function(){app.use(NoopStreamingMiddleware)}).to.not.throw();
 
-          expect(function(){app.use([])}).to.throw(Error, ErrorText);
-          expect(function(){app.use(function(){})}).to.throw(Error, ErrorText);
-          expect(function(){app.use(function(one,two){})}).to.throw(Error, ErrorText);
-          expect(function(){app.use(function(onw,two,three,four){})}).to.throw(Error, ErrorText);
+          expect(function(){app.use([])}).to.throw(Error, VALIDATION_ERROR);
+          expect(function(){app.use(function(){})}).to.throw(Error, VALIDATION_ERROR);
+          expect(function(){app.use(function(one,two){})}).to.throw(Error, VALIDATION_ERROR);
+          expect(function(){app.use(function(onw,two,three,four){})}).to.throw(Error, VALIDATION_ERROR);
 
       });
 
       it('should try to load a module if a string is passed or throw error', function() {
           var app = StreamingMiddleware();
-          var ErrorText = /StreamingMiddleware.use was called with a String but could not load the module/;
 
           expect(function(){app.use("../examples/plugin-uppercase.js")}).to.not.throw();
-          expect(function(){app.use("random text")}).to.throw(Error, ErrorText);
+          expect(function(){app.use("random text")}).to.throw(Error, VALIDATION_ERROR);
 
       });
 

@@ -7,14 +7,20 @@ chai.use(chaiStream);
 chai.use(sinonChai);
 const expect = chai.expect;
 
-const {PassThrough} = require("stream");
+const {Transform, PassThrough} = require("stream");
 const MemoryStream = require('memorystream');
 const MiddlewareChainedStream = require('../../lib/MiddlewareChainedStream.js');
 
-const validStack = [function NoopStreamingMiddleware(chunk, enc, next){
+const util = require('util');
+
+const NoopStreamingMiddleware = function Noop(chunk, enc, next){
   this.push(chunk);
   callback();
-}];
+};
+
+const validStack = [NoopStreamingMiddleware];
+
+const VALIDATION_ERROR = "Stack must be none null and contain only functions that inherit stream.Transform or have 3 args";
 
 describe('MiddlewareChainedStream', function() {
 
@@ -53,11 +59,8 @@ describe('MiddlewareChainedStream', function() {
 
     it('should work with or without optional options argument', function() {
 
-        // var withoutOptionsNoStack = new MiddlewareChainedStream();
-        // expect(withoutOptionsNoStack).to.be.an.instanceOf(PassThrough);
-
-        var ErrorText = "Stack validation failed: transform functions must have signature (chunk,enc,next)";
-        expect(function(){MiddlewareChainedStream([{}]);}).to.throw(Error, ErrorText);
+        var withoutOptionsNoStack = new MiddlewareChainedStream();
+        expect(withoutOptionsNoStack).to.be.an.instanceOf(PassThrough);
 
         var withoutOptionsStack = new MiddlewareChainedStream(validStack);
         expect(withoutOptionsStack).to.be.an.instanceOf(MiddlewareChainedStream);
@@ -67,9 +70,81 @@ describe('MiddlewareChainedStream', function() {
 
     });
 
+    it('should throw an error if any elements in the stack are not plain function or stream.Transform', function() {
+
+        var undef;
+
+        // Object
+        expect(function(){MiddlewareChainedStream([{}]);}).to.throw(Error, VALIDATION_ERROR);
+        // Object, Function, Array
+        expect(function(){MiddlewareChainedStream([{},NoopStreamingMiddleware,[]]);}).to.throw(Error, VALIDATION_ERROR);
+        // Function, Function, null
+        expect(function(){MiddlewareChainedStream([NoopStreamingMiddleware,NoopStreamingMiddleware,null]);}).to.throw(Error, VALIDATION_ERROR);
+        // Function, Function, undefined
+        expect(function(){MiddlewareChainedStream([NoopStreamingMiddleware,NoopStreamingMiddleware,undef]);}).to.throw(Error, VALIDATION_ERROR);
+        // Function, undefined, Function
+        expect(function(){MiddlewareChainedStream([NoopStreamingMiddleware,undef,NoopStreamingMiddleware]);}).to.throw(Error, VALIDATION_ERROR);
+        // undefined
+        expect(function(){MiddlewareChainedStream([undef]);}).to.throw(Error, VALIDATION_ERROR);
+        // null
+        expect(function(){MiddlewareChainedStream([null]);}).to.throw(Error, VALIDATION_ERROR);
+
+    });
+
     it('should return a PassthroughStream if stack is empty', function() {
         var withNewOperator = new MiddlewareChainedStream({},[]);
         expect(withNewOperator).to.be.an.instanceOf(PassThrough);
+
+        var withNewOperator = new MiddlewareChainedStream([]);
+        expect(withNewOperator).to.be.an.instanceOf(PassThrough);
+    });
+
+    it('should return a MiddlewareChainedStream if stack contains plain functions with correct sig', function() {
+        var stream = new MiddlewareChainedStream([
+          function(chunk,enc,next){
+            next(null, chunk.toString().split("").reverse().join(""));
+          }
+        ]);
+        expect(stream).to.be.an.instanceOf(MiddlewareChainedStream);
+
+        var stream2 = new MiddlewareChainedStream([
+          function(chunk,enc,next){
+            next(null, chunk.toString().split("").reverse().join(""));
+          },
+          function(chunk,enc,next){
+            next(null, chunk.toString().toUpperCase());
+          },
+        ]);
+        expect(stream2).to.be.an.instanceOf(MiddlewareChainedStream);
+    });
+
+    it('should return a MiddlewareChainedStream if stack contains Transform instances', function() {
+
+        function TestTransform(options){
+          Transform.call(this, options);
+        }
+        util.inherits(TestTransform, Transform);
+
+        TestTransform.prototype._transform = function(data, encoding, callback) {
+          callback(null, data);
+        };
+
+        var transform1 = new TestTransform();
+
+        var stream = new MiddlewareChainedStream([transform1]);
+        expect(stream).to.be.an.instanceOf(MiddlewareChainedStream);
+
+        var transform2 = new TestTransform({objectMode: true});
+        var transform3 = new TestTransform({objectMode: true});
+
+        var stream2 = new MiddlewareChainedStream([transform2,transform3]);
+        expect(stream2).to.be.an.instanceOf(MiddlewareChainedStream);
+
+        var plainFunction = function(chunk,enc,next){};
+
+        var stream3 = new MiddlewareChainedStream([transform2,plainFunction,transform3]);
+        expect(stream3).to.be.an.instanceOf(MiddlewareChainedStream);
+
     });
 
     it('should pipe data correctly as a Passthrough', function(done) {
