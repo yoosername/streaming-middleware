@@ -81,8 +81,7 @@ Return a Duplex stream where you write to the first Transform middleware and rea
 
 **Parameters**
 
--   `options`  
--   `Object`  options - optional stream object e.g. {objectMode:true}
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** optional stream object e.g. {objectMode:true}
 
 Returns **DuplexStream** 
 
