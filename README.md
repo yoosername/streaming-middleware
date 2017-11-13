@@ -64,7 +64,8 @@ Returns **[StreamingMiddleware](#streamingmiddleware)**
 #### use
 
 Add a single Transform middleware function to the stack
-can be chained for ease of use
+
+-   can be chained for ease of use
 
 **Parameters**
 
