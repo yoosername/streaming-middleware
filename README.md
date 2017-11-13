@@ -57,22 +57,21 @@ npm coverage
 
 ### StreamingMiddleware
 
-Compose a duplex stream from various Transform functions as middleware
+Transform stream middleware builder
 
-Returns **[StreamingMiddleware](#streamingmiddleware)**
+Returns **[StreamingMiddleware](#streamingmiddleware)** 
 
 #### use
 
 Add a single Transform middleware function to the stack
-
--   can be chained for ease of use
+can be chained for ease of use
 
 **Parameters**
 
 -   `fn`  
 -   `null-null` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** An instanceof {Transform} or a plain Function with 3 args
 
-Returns **this**
+Returns **[StreamingMiddleware](#streamingmiddleware)** 
 
 #### stream
 
@@ -85,7 +84,7 @@ Return a Duplex stream where you write to the first Transform middleware and rea
 -   `options`  
 -   `Object`  options - optional stream object e.g. {objectMode:true}
 
-Returns **(PassThrough | MiddlewareChainedStream)** 
+Returns **DuplexStream** 
 
 ## More Examples
 
