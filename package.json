@@ -1,10 +1,11 @@
 {
   "name": "streaming-middleware",
-  "version": "0.0.1",
-  "description": "Compose a Transform Stream a bit like Express/Connect middleware.",
+  "version": "0.0.1-alpha",
+  "description": "Compose a chain of Transform Streams with Express-like middleware.",
   "main": "index.js",
   "scripts": {
-    "test": "nyc ./node_modules/mocha/bin/mocha test/**/*spec.js --reporter spec"
+    "test": "./node_modules/mocha/bin/mocha test/**/*spec.js --reporter spec",
+    "coverage": "nyc ./node_modules/mocha/bin/mocha test/**/*spec.js --reporter spec"
   },
   "author": "https://github.com/yoosername",
   "license": "MIT",
@@ -12,18 +13,15 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-stream": "0.0.0",
-    "commander": "^2.11.0",
-    "elasticsearch": "^13.3.1",
-    "elasticsearch-streams": "0.0.10",
-    "expand-tilde": "^2.0.2",
     "istanbul": "^0.4.5",
     "memory-stream": "0.0.3",
     "memorystream": "^0.3.1",
     "mocha": "^4.0.1",
     "nyc": "^11.3.0",
-    "random-document-stream": "0.0.0",
     "sinon": "^4.1.1",
-    "sinon-chai": "^2.14.0",
-    "through2": "^2.0.3"
-  }
+    "sinon-chai": "^2.14.0"
+  },
+  "template": {
+     "forceLanguage": "en"
+   }
 }
