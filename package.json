@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha test/**/*spec.js --reporter spec",
-    "coverage": "nyc ./node_modules/mocha/bin/mocha test/**/*spec.js --reporter spec"
+    "coverage": "nyc ./node_modules/mocha/bin/mocha test/**/*spec.js --reporter spec",
+    "generate-docs" : "node ./node_modules/documentation/bin/documentation.js readme index.js --section=API"
   },
   "author": "https://github.com/yoosername",
   "license": "MIT",
