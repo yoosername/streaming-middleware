@@ -69,8 +69,7 @@ Add a single Transform middleware function to the stack
 
 **Parameters**
 
--   `fn`  
--   `null-null` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** An instanceof {Transform} or a plain Function with 3 args
+-   `fn` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** An instanceof {Transform} or a plain Function with 3 args
 
 Returns **[StreamingMiddleware](#streamingmiddleware)** 
 
