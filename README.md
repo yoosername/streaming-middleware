@@ -1,6 +1,7 @@
 # streaming-middleware
 
 [![Build Status](https://travis-ci.org/yoosername/streaming-middleware.svg?branch=master)](https://travis-ci.org/yoosername/streaming-middleware)
+[![Coverage Status](https://coveralls.io/repos/github/yoosername/streaming-middleware/badge.svg?branch=master)](https://coveralls.io/github/yoosername/streaming-middleware?branch=master)
 
 Compose a chain of Transform Streams with Express-like middleware.
 
