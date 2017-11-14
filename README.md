@@ -125,6 +125,6 @@ See [more examples in the Example folder](https://github.com/yoosername/streamin
 
 ## Why
 
--   Experiment creating an easily extendable CLI for processing streamed data
--   Experiment using a test driven approach
--   Experiment using various Tools e.g. travisci, jshint, instanbull, autodoc etc
+- Experiment creating an easily extendable CLI for processing streamed data
+- Experiment using a test driven approach
+- Experiment using various Tools e.g. travis-ci, jshint, instanbul, autodoc etc
