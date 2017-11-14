@@ -95,7 +95,7 @@ Returns **[StreamingMiddleware](#streamingmiddleware)**
 
 #### stream
 
-Return a Duplex stream build by connecting all the Transform streams which were added via StreamingMiddleware.use()
+Return a Duplex stream built by connecting all the Transform streams which were added via StreamingMiddleware.use()
 
 **Parameters**
 
