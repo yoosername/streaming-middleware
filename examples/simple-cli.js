@@ -3,7 +3,8 @@ var path = require("path");
 var StreamingMiddleware = require("../StreamingMiddleware.js");
 var app = StreamingMiddleware();
 
-function addMiddlewareToStack(middleware, collection) {
+function addMiddlewareToStack(middleware) {
+  "use strict";
   app.use(path.resolve(__dirname, middleware));
 }
 

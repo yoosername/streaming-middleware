@@ -1,5 +1,6 @@
 
 function TransformToBulk(doc, enc, next){
+  "use strict";
 
   var docId = doc._id;
   doc._id = undefined;
