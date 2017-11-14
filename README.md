@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/yoosername/streaming-middleware.svg?branch=master)](https://travis-ci.org/yoosername/streaming-middleware)
-
 # streaming-middleware
+
+[![Build Status](https://travis-ci.org/yoosername/streaming-middleware.svg?branch=master)](https://travis-ci.org/yoosername/streaming-middleware)
 
 Compose a chain of Transform Streams with Express-like middleware.
 
@@ -57,31 +57,65 @@ npm coverage
 
 ### StreamingMiddleware
 
-Transform stream middleware builder
+Transform stream builder
 
 Returns **[StreamingMiddleware](#streamingmiddleware)** 
 
 #### use
 
-Add a single Transform middleware function to the stack
-
--   can be chained for ease of use
+Add a Transform middleware function to the stack
 
 **Parameters**
 
 -   `fn` **[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** An instanceof {Transform} or a plain Function with 3 args
 
+**Examples**
+
+```javascript
+Simple use
+
+ var app = StreamingMiddleware();
+ app.use(function Uppercase(chunk, enc, next){
+   next(null, chunk.toString().toUpperCase() );
+ })
+```
+
+```javascript
+Chaining
+
+ var app = StreamingMiddleware();
+ app
+   .use(function Uppercase(chunk, enc, next){
+     next(null, chunk.toString().toUpperCase() );
+   })
+   .use(function Reverse(chunk, enc, next){
+     next(null, chunk.toString().split("").reverse().join("").trim("") + "\n" );
+   })
+```
+
 Returns **[StreamingMiddleware](#streamingmiddleware)** 
 
 #### stream
 
-Return a Duplex stream where you write to the first Transform middleware and read from the last
-
--   can be chained for ease of use
+Return a Duplex stream consisting of a chain of piped Transform streams added via {StreamingMiddleware.prototype.use}
 
 **Parameters**
 
--   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** optional stream object e.g. {objectMode:true}
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** options passed to each Transform e.g. objectMode
+
+**Examples**
+
+```javascript
+Stream of 2 Transforms in non object mode
+
+ var app = StreamingMiddleware();
+ app.use(function Uppercase(chunk, enc, next){
+  next(null, chunk.toString().toUpperCase() );
+ }).use(function Uppercase(chunk, enc, next){
+  next(null, chunk.toString().split("").reverse().join("").trim("") + "\n" );
+ })
+ process.stdin.pipe(app.stream({objectMode:false})).pipe(process.stdout);
+```
 
 Returns **DuplexStream** 
 
@@ -91,5 +125,6 @@ See [more examples in the Example folder](https://github.com/yoosername/streamin
 
 ## Why
 
--   Experimenting with creating an easily extendable CLI for processing streamed data
--   Experimenting with a test driven approach
+-   Experiment creating an easily extendable CLI for processing streamed data
+-   Experiment using a test driven approach
+-   Experiment using various Js Tools, build, lint, coverage, autodocs etc

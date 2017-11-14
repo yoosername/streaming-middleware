@@ -15,8 +15,10 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-stream": "0.0.0",
+    "documentation": "^5.3.3",
     "eslint": "^4.11.0",
     "istanbul": "^0.4.5",
+    "jshint": "^2.9.5",
     "memory-stream": "0.0.3",
     "memorystream": "^0.3.1",
     "mocha": "^4.0.1",
