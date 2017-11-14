@@ -59,11 +59,9 @@ npm coverage
 
 Transform stream builder
 
-Returns **[StreamingMiddleware](#streamingmiddleware)** 
-
 #### use
 
-Add a Transform middleware function to the stack
+Add a Transform Function to the stack
 
 **Parameters**
 
@@ -97,11 +95,11 @@ Returns **[StreamingMiddleware](#streamingmiddleware)**
 
 #### stream
 
-Return a Duplex stream consisting of a chain of piped Transform streams added via {StreamingMiddleware.prototype.use}
+Return a Duplex stream build by connecting all the Transform streams which were added via StreamingMiddleware.use()
 
 **Parameters**
 
-- `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** options passed to each Transform e.g. objectMode
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** options passed to each Transform e.g. "objectMode"
 
 **Examples**
 
@@ -116,10 +114,10 @@ Stream of 2 Transforms in non object mode
    .use(function Uppercase(chunk, enc, next){
      next(null, chunk.toString().split("").reverse().join("").trim("") + "\n" );
    })
- process.stdin.pipe(app.stream({objectMode:false})).pipe(process.stdout);
+ process.stdin.pipe(app.stream()).pipe(process.stdout);
 ```
 
-Returns **DuplexStream**
+Returns **DuplexStream** 
 
 ## More Examples
 
@@ -127,6 +125,6 @@ See [more examples in the Example folder](https://github.com/yoosername/streamin
 
 ## Why
 
-- Experiment creating an easily extendable CLI for processing streamed data
-- Experiment using a test driven approach
-- Experiment using various Tools e.g. travisci, jshint, instanbull, autodoc etc
+-   Experiment creating an easily extendable CLI for processing streamed data
+-   Experiment using a test driven approach
+-   Experiment using various Tools e.g. travisci, jshint, instanbull, autodoc etc
