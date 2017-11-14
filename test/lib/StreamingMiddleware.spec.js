@@ -65,11 +65,36 @@ describe('StreamingMiddleware', function() {
 
       it('should try to load a module if a string is passed or throw error', function() {
           var app = StreamingMiddleware();
+          var pluginPath = "../examples/plugins/uppercase.js";
+          var plugin = require("../"+pluginPath);
+          var CHUNK = "chunk";
 
-          expect(function(){app.use("../examples/plugins/uppercase.js")}).to.not.throw();
+          plugin(CHUNK,"enc",function(err, chunk){
+            expect(chunk).to.equal("CHUNK");
+          });
+
+          expect(function(){app.use(plugin)}).to.not.throw();
+          expect(function(){app.use(pluginPath)}).to.not.throw();
           expect(function(){app.use("random text")}).to.throw(Error, VALIDATION_ERROR);
 
       });
+
+      it('should be able to be chained', function() {
+        var app = StreamingMiddleware();
+
+        expect(function(){
+            app
+                .use(NoopStreamingMiddleware)
+                .use(NoopStreamingMiddleware)
+                .use(NoopStreamingMiddleware)
+                .use(NoopStreamingMiddleware)
+                .use(NoopStreamingMiddleware)
+                .use(NoopStreamingMiddleware)
+        }).to.not.throw();
+
+        expect(app._stack.length).to.equal(6);
+
+    });
 
     });
 
@@ -125,23 +150,55 @@ describe('StreamingMiddleware', function() {
             var obj = chunk;
             obj.count++;
             next(null, obj); // instead of this.push
-          })
+          });
           middleware.use(function(chunk, enc, next){
             //console.log("second middleware received a chunk: ",chunk);
             var obj = chunk;
             obj.count++;
             next(null, obj); // instead of this.push
-          })
+          });
 
           var stream = middleware.stream(options);
           stream.pipe(TransformStreamWrapper(options, function(chunk,enc,next){
-            //console.log("final pipe received a chunk: ",chunk);
             expect(chunk.count).to.equal(2);
             done();
           }));
           stream.write(dataIn);
 
       });
+
+        it('should process in the correct order', function(done) {
+
+            var middleware = StreamingMiddleware();
+            var dataIn = "abcdef";
+            var dataOut = "";
+
+            middleware
+                .use(function(chunk, enc, next){
+                    next(null, chunk+"ghijkl");
+                })
+                .use(function(chunk, enc, next){
+                    next(null, chunk+"mnopqr");
+                })
+                .use(function(chunk, enc, next){
+                    next(null, chunk+"stuvwxyz");
+                });
+
+            var stream = middleware.stream();
+
+            stream
+                .on("readable",function(){
+                    var data = stream.read();
+                    if(data) dataOut += data;
+                })
+                .on("finish", function(){
+                    expect(dataOut).to.equal("abcdefghijklmnopqrstuvwxyz");
+                    done();
+                })
+
+            stream.end(dataIn);
+
+        });
 
     });
 
