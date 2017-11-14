@@ -66,7 +66,7 @@ describe('StreamingMiddleware', function() {
       it('should try to load a module if a string is passed or throw error', function() {
           var app = StreamingMiddleware();
 
-          expect(function(){app.use("../examples/plugin-uppercase.js")}).to.not.throw();
+          expect(function(){app.use("../examples/plugins/uppercase.js")}).to.not.throw();
           expect(function(){app.use("random text")}).to.throw(Error, VALIDATION_ERROR);
 
       });
