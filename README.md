@@ -13,7 +13,7 @@ npm install
 
 ## Usage
 
-An instance of StreamingMiddleware is a special kind of transform stream to which you write readable streams. The contents of the readable streams will be concatenated in the order you wrote them.
+An instance of StreamingMiddleware is a type of Duplex Stream which internally writes data to and reads data from a chain of Transform streams that are piped through dynamically in the order you add them.
 
 ```javascript
 var StreamingMiddleware = require("../StreamingMiddleware.js");
