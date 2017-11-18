@@ -7,9 +7,19 @@
     "test": "./node_modules/mocha/bin/mocha test/**/*spec.js --reporter spec",
     "coverage": "nyc ./node_modules/mocha/bin/mocha test/**/*spec.js --reporter spec",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
-    "lint": "./node_modules/.bin/eslint index.js",
     "generate-docs": "node ./node_modules/documentation/bin/documentation.js readme index.js --section=API"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/yoosername/streaming-middleware.git"
+  },
+  "keywords": [
+    "stream",
+    "streams",
+    "streaming",
+    "middleware",
+    "utility"
+  ],
   "author": "https://github.com/yoosername",
   "license": "MIT",
   "dependencies": {},
