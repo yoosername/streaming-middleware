@@ -7,7 +7,7 @@ chai.use(chaiStream);
 chai.use(sinonChai);
 const expect = chai.expect;
 
-const {Transform, PassThrough} = require("stream");
+const {Transform, PassThrough, Readable} = require("stream");
 const MemoryStream = require('memorystream');
 const MiddlewareChainedStream = require('../../lib/MiddlewareChainedStream.js');
 
@@ -309,6 +309,48 @@ describe('MiddlewareChainedStream', function() {
         });
 
         stream.end();
+
+    });
+
+    it('should work as a regular writable stream', function(done) {
+      
+      var simplePassThrough = new MiddlewareChainedStream([
+        function(chunk,enc,next){
+          next(null, chunk);
+        }
+      ]);
+      var result = "";
+
+      simplePassThrough.on('readable', function(){
+        var it = simplePassThrough.read();
+        result += (it) ? it : "";
+      });
+
+      simplePassThrough.on('finish', function(){
+        expect(result).to.equal('some datasome more datadone writing data');
+        done();
+      });
+
+      simplePassThrough.write('some data');
+      simplePassThrough.write('some more data');
+      simplePassThrough.end('done writing data');
+
+    });
+
+    it("should handle unpipe event", function(done){
+
+      const simplePassThrough = new MiddlewareChainedStream([
+        function(chunk,enc,next){
+          next(null, chunk);
+        }
+      ]);
+      const reader = new Readable();
+      simplePassThrough.on('unpipe', (src) => {
+        expect(src).to.eql(reader);
+        done();
+      });
+      reader.pipe(simplePassThrough);
+      reader.unpipe(simplePassThrough);
 
     });
 
