@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/yoosername/streaming-middleware.svg?branch=master)](https://travis-ci.org/yoosername/streaming-middleware)
 [![Coverage Status](https://coveralls.io/repos/github/yoosername/streaming-middleware/badge.svg?branch=master)](https://coveralls.io/github/yoosername/streaming-middleware?branch=master)
 
-Compose a chain of Transform Streams with Express-like middleware.
+> Compose a chain of Transform Streams with Express-like middleware.
 
 ## Installation
 
@@ -13,7 +13,7 @@ npm install
 
 ## Usage
 
-app.js
+An instance of StreamingMiddleware is a special kind of transform stream to which you write readable streams. The contents of the readable streams will be concatenated in the order you wrote them.
 
 ```javascript
 var StreamingMiddleware = require("../StreamingMiddleware.js");
