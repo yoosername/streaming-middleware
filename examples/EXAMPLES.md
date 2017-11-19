@@ -72,13 +72,13 @@ module.exports = Uppercase;
 ### plugins/reverse.js
 
 ```javascript
-function Uppercase(chunk, enc, next){
+function Reverse(chunk, enc, next){
 
   next(null, chunk.toString().split("").reverse().join("").trim("") + "\n" );
 
 }
 
-module.exports = Uppercase;
+module.exports = Reverse;
 ```
 
 ### Usage
