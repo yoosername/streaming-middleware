@@ -7,7 +7,7 @@
     "test": "./node_modules/jshint/bin/jshint lib/*.js && ./node_modules/mocha/bin/mocha test/**/*spec.js --reporter spec",
     "coverage": "nyc ./node_modules/mocha/bin/mocha test/**/*spec.js --reporter spec",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
-    "generate-docs": "node ./node_modules/documentation/bin/documentation.js readme index.js --section=API"
+    "generate-docs": "node ./node_modules/documentation/bin/documentation.js readme index.js --section=API && mocha test/**/*spec.js --reporter=markdown > ./test/tests.md"
   },
   "repository": {
     "type": "git",
