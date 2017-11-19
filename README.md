@@ -51,7 +51,7 @@ mocha test/**/*spec.js --reporter=nyan
 ## Coverage
 
 ```bash
-npm coverage
+npm run coverage
 ```
 
 ## API
