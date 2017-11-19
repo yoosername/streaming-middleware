@@ -8,7 +8,7 @@
 ## Installation
 
 ```bash
-npm install
+npm install streaming-middleware
 ```
 
 ## Usage
@@ -16,7 +16,7 @@ npm install
 An instance of StreamingMiddleware is a type of Duplex Stream which internally writes data to and reads data from a chain of Transform streams that are piped through dynamically in the order you add them.
 
 ```javascript
-var StreamingMiddleware = require("../StreamingMiddleware.js");
+var StreamingMiddleware = require("streaming-middleware");
 var app = StreamingMiddleware();
 
 app

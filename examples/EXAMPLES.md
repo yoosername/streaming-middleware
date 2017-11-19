@@ -13,7 +13,7 @@ npm install
 ## Simple pipe from STDIN to STDOUT
 
 ```javascript
-var StreamingMiddleware = require("../lib/StreamingMiddleware.js");
+var StreamingMiddleware = require("streaming-middleware");
 var app = StreamingMiddleware();
 
 app
@@ -42,7 +42,7 @@ echo "tiny rick" | node simple-pipe.js  # KCIR YNIT
 ```javascript
 var program = require('commander');
 var path = require("path");
-var StreamingMiddleware = require("../StreamingMiddleware.js");
+var StreamingMiddleware = require("streaming-middleware");
 var app = StreamingMiddleware();
 
 function addMiddlewareToStack(middleware, collection) {
@@ -94,7 +94,7 @@ echo "pickle rick" | node simple-cli.js -p ./plugins/uppercase.js -p ./plugins/r
 ```javascript
 const WritableBulk = require('elasticsearch-streams').WritableBulk;
 const random = require('random-document-stream');
-var app = require("../lib/StreamingMiddleware.js")();
+var app = require("streaming-middleware")();
 
 function addMiddlewareToStack(middleware) {
   "use strict";
@@ -167,7 +167,7 @@ node ./elasticsearch-upload.js -a 5 -h localhost -p 32769 -i test -t ./plugins/t
 
 ```javascript
 const cli = require('commander');
-const StreamingMiddleware = require("../lib/StreamingMiddleware.js");
+const StreamingMiddleware = require("streaming-middleware");
 const app = StreamingMiddleware();
 const ReadableSearch = require('elasticsearch-streams').ReadableSearch;
 

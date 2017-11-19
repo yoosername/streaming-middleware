@@ -1,6 +1,6 @@
 var program = require('commander');
 var path = require("path");
-var StreamingMiddleware = require("../StreamingMiddleware.js");
+var StreamingMiddleware = require("../lib/StreamingMiddleware.js");
 var app = StreamingMiddleware();
 
 function addMiddlewareToStack(middleware) {
