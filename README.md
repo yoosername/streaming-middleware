@@ -36,6 +36,8 @@ echo "pickle rick" | node app.js      // # KCIR ELKCIP
 
 ## Test
 
+> See [example tests](https://github.com/yoosername/streaming-middleware/blob/master/test/tests.md)
+
 ```bash
 npm test
 
