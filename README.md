@@ -1,7 +1,9 @@
 # streaming-middleware
 
-[![Build Status](https://travis-ci.org/yoosername/streaming-middleware.svg?branch=master)](https://travis-ci.org/yoosername/streaming-middleware)
-[![Coverage Status](https://coveralls.io/repos/github/yoosername/streaming-middleware/badge.svg?branch=master)](https://coveralls.io/github/yoosername/streaming-middleware?branch=master)
+[![build status](https://img.shields.io/travis/yoosername/streaming-middleware.svg?style=flat-square)](https://travis-ci.org/yoosername/streaming-middleware)
+[![Coverage Status](https://img.shields.io/coveralls/yoosername/streaming-middleware.svg?style=flat-square)](https://coveralls.io/github/yoosername/streaming-middleware?branch=master)
+[![npm](https://img.shields.io/npm/v/streaming-middleware.svg?style=flat-square)](https://www.npmjs.com/package/streaming-middleware)
+[![license](https://img.shields.io/github/license/yoosername/streaming-middleware.svg?style=flat-square)](https://github.com/yoosername/streaming-middleware)
 
 > Compose a chain of Transform Streams with Express-like middleware.
 
