@@ -1,6 +1,6 @@
 {
   "name": "streaming-middleware",
-  "version": "0.0.1-alpha",
+  "version": "0.0.1",
   "description": "Compose a chain of Transform streams with Express-like middleware.",
   "main": "index.js",
   "scripts": {
