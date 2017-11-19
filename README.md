@@ -36,8 +36,6 @@ echo "pickle rick" | node app.js      // # KCIR ELKCIP
 
 ## Test
 
-> See [example tests](https://github.com/yoosername/streaming-middleware/blob/master/test/tests.md)
-
 ```bash
 npm test
 
@@ -47,6 +45,10 @@ mocha test/**/*spec.js --reporter spec
 # or
 mocha test/**/*spec.js --reporter=nyan
 ```
+
+## Test Documentation
+
+The [test documentation](https://github.com/yoosername/streaming-middleware/blob/master/test/tests.md) was generated with Mocha’s “doc” reporter, and directly reflects the test suite.
 
 ## Coverage
 
